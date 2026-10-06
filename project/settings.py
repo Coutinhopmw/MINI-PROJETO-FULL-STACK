@@ -51,6 +51,9 @@ INSTALLED_APPS = [
     'app.core',
     'app.accounts',
     'app.solicitacoes',
+    'rest_framework',
+    'django_filters',
+    'drf_spectacular',
 ]
 
 AUTH_USER_MODEL = 'accounts.Usuario'
@@ -159,3 +162,33 @@ CSRF_COOKIE_SECURE = env.bool('DJANGO_SECURE_COOKIES', default=False)
 # Email
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'app.core.pagination.PaginacaoPadrao',
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend',
+    ],
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'EXCEPTION_HANDLER': 'app.core.exceptions.tratador_de_excecoes',
+    'DEFAULT_THROTTLE_RATES': {
+        'login': '5/min',
+    },
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Portal de Solicitações Internas',
+    'DESCRIPTION': 'API REST do portal de solicitações internas.',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+}
