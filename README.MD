@@ -594,10 +594,10 @@ Os usuários abaixo são criados pelo comando `seed_demo`, junto com cerca de 15
 
 | Usuário | Senha | Perfil | Use para testar |
 |---|---|---|---|
-| `colaborador` | `Colab@2026` | Colaborador | Criar, editar e excluir as próprias solicitações |
-| `colaborador2` | `Colab@2026` | Colaborador | Isolamento: não enxerga as solicitações do `colaborador` |
-| `atendente` | `Atend@2026` | Atendente | Ver todas as solicitações e alterar o status |
-| `admin` | `Admin@2026` | Atendente + superusuário | Django Admin em `/admin/` |
+| `colaborador` | `qwe123` | Colaborador | Criar, editar e excluir as próprias solicitações |
+| `colaborador2` | `qwe123` | Colaborador | Isolamento: não enxerga as solicitações do `colaborador` |
+| `atendente` | `qwe123` | Atendente | Ver todas as solicitações e alterar o status |
+| `admin` | `qwe123` | Atendente + superusuário | Django Admin em `/admin/` |
 
 > Essas credenciais existem apenas para demonstração e não devem ser usadas em produção.
 
