@@ -1,0 +1,607 @@
+openapi: 3.0.3
+info:
+  title: Portal de Solicitações Internas
+  version: 1.0.0
+  description: API REST do portal de solicitações internas.
+paths:
+  /api/v1/auth/login/:
+    post:
+      operationId: v1_auth_login_create
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Login'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Login'
+        required: true
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Usuario'
+          description: ''
+  /api/v1/auth/logout/:
+    post:
+      operationId: v1_auth_logout_create
+      tags:
+      - v1
+      security:
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/auth/me/:
+    get:
+      operationId: v1_auth_me_retrieve
+      tags:
+      - v1
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Usuario'
+          description: ''
+  /api/v1/categorias/:
+    get:
+      operationId: v1_categorias_list
+      tags:
+      - v1
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Categoria'
+          description: ''
+  /api/v1/dashboard/:
+    get:
+      operationId: v1_dashboard_retrieve
+      tags:
+      - v1
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dashboard'
+          description: ''
+  /api/v1/solicitacoes/:
+    get:
+      operationId: v1_solicitacoes_list
+      parameters:
+      - in: query
+        name: categoria
+        schema:
+          type: integer
+      - in: query
+        name: data_fim
+        schema:
+          type: string
+          format: date
+      - in: query
+        name: data_inicio
+        schema:
+          type: string
+          format: date
+      - name: page
+        required: false
+        in: query
+        description: Um número de página dentro do conjunto de resultados paginado.
+        schema:
+          type: integer
+      - in: query
+        name: q
+        schema:
+          type: string
+      - in: query
+        name: status
+        schema:
+          type: string
+          enum:
+          - ABERTO
+          - CONCLUIDO
+          - EM_ATENDIMENTO
+        description: |-
+          * `ABERTO` - Aberto
+          * `EM_ATENDIMENTO` - Em atendimento
+          * `CONCLUIDO` - Concluído
+      tags:
+      - v1
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedSolicitacaoListaList'
+          description: ''
+    post:
+      operationId: v1_solicitacoes_create
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SolicitacaoEscrita'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SolicitacaoEscrita'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SolicitacaoEscrita'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SolicitacaoDetalhe'
+          description: ''
+  /api/v1/solicitacoes/{id}/:
+    get:
+      operationId: v1_solicitacoes_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: Um valor inteiro único que identifica este solicitação.
+        required: true
+      tags:
+      - v1
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SolicitacaoDetalhe'
+          description: ''
+    patch:
+      operationId: v1_solicitacoes_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: Um valor inteiro único que identifica este solicitação.
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedSolicitacaoEscrita'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedSolicitacaoEscrita'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedSolicitacaoEscrita'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SolicitacaoDetalhe'
+          description: ''
+    delete:
+      operationId: v1_solicitacoes_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: Um valor inteiro único que identifica este solicitação.
+        required: true
+      tags:
+      - v1
+      security:
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/solicitacoes/{id}/historico/:
+    get:
+      operationId: v1_solicitacoes_historico_list
+      parameters:
+      - in: query
+        name: categoria
+        schema:
+          type: integer
+      - in: query
+        name: data_fim
+        schema:
+          type: string
+          format: date
+      - in: query
+        name: data_inicio
+        schema:
+          type: string
+          format: date
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: Um valor inteiro único que identifica este solicitação.
+        required: true
+      - in: query
+        name: q
+        schema:
+          type: string
+      - in: query
+        name: status
+        schema:
+          type: string
+          enum:
+          - ABERTO
+          - CONCLUIDO
+          - EM_ATENDIMENTO
+        description: |-
+          * `ABERTO` - Aberto
+          * `EM_ATENDIMENTO` - Em atendimento
+          * `CONCLUIDO` - Concluído
+      tags:
+      - v1
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HistoricoStatus'
+          description: ''
+  /api/v1/solicitacoes/{id}/status/:
+    post:
+      operationId: v1_solicitacoes_status_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: Um valor inteiro único que identifica este solicitação.
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlterarStatus'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AlterarStatus'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AlterarStatus'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SolicitacaoDetalhe'
+          description: ''
+components:
+  schemas:
+    AlterarStatus:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/StatusNovoEnum'
+      required:
+      - status
+    Categoria:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        nome:
+          type: string
+          maxLength: 50
+      required:
+      - id
+      - nome
+    Dashboard:
+      type: object
+      properties:
+        total:
+          type: integer
+        abertas:
+          type: integer
+        em_atendimento:
+          type: integer
+        concluidas:
+          type: integer
+      required:
+      - abertas
+      - concluidas
+      - em_atendimento
+      - total
+    HistoricoStatus:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        status_anterior:
+          $ref: '#/components/schemas/StatusNovoEnum'
+        status_anterior_display:
+          type: string
+          readOnly: true
+        status_novo:
+          $ref: '#/components/schemas/StatusNovoEnum'
+        status_novo_display:
+          type: string
+          readOnly: true
+        alterado_por:
+          allOf:
+          - $ref: '#/components/schemas/UsuarioResumo'
+          readOnly: true
+        alterado_em:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - alterado_em
+      - alterado_por
+      - id
+      - status_anterior
+      - status_anterior_display
+      - status_novo
+      - status_novo_display
+    Login:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+          writeOnly: true
+      required:
+      - password
+      - username
+    PaginatedSolicitacaoListaList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/SolicitacaoLista'
+    PatchedSolicitacaoEscrita:
+      type: object
+      properties:
+        titulo:
+          type: string
+          maxLength: 150
+          minLength: 3
+        descricao:
+          type: string
+        categoria:
+          type: integer
+    PerfilEnum:
+      enum:
+      - COLABORADOR
+      - ATENDENTE
+      type: string
+      description: |-
+        * `COLABORADOR` - Colaborador
+        * `ATENDENTE` - Atendente
+    SolicitacaoDetalhe:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        codigo:
+          type: string
+          readOnly: true
+        titulo:
+          type: string
+          maxLength: 150
+        categoria:
+          allOf:
+          - $ref: '#/components/schemas/Categoria'
+          readOnly: true
+        solicitante:
+          allOf:
+          - $ref: '#/components/schemas/UsuarioResumo'
+          readOnly: true
+        status:
+          $ref: '#/components/schemas/StatusNovoEnum'
+        status_display:
+          type: string
+          readOnly: true
+        criado_em:
+          type: string
+          format: date-time
+          readOnly: true
+        descricao:
+          type: string
+        atualizado_em:
+          type: string
+          format: date-time
+          readOnly: true
+        pode_editar:
+          type: boolean
+          readOnly: true
+        proximos_status:
+          type: array
+          items:
+            type: string
+          readOnly: true
+      required:
+      - atualizado_em
+      - categoria
+      - codigo
+      - criado_em
+      - descricao
+      - id
+      - pode_editar
+      - proximos_status
+      - solicitante
+      - status_display
+      - titulo
+    SolicitacaoEscrita:
+      type: object
+      properties:
+        titulo:
+          type: string
+          maxLength: 150
+          minLength: 3
+        descricao:
+          type: string
+        categoria:
+          type: integer
+      required:
+      - categoria
+      - descricao
+      - titulo
+    SolicitacaoLista:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        codigo:
+          type: string
+          readOnly: true
+        titulo:
+          type: string
+          maxLength: 150
+        categoria:
+          allOf:
+          - $ref: '#/components/schemas/Categoria'
+          readOnly: true
+        solicitante:
+          allOf:
+          - $ref: '#/components/schemas/UsuarioResumo'
+          readOnly: true
+        status:
+          $ref: '#/components/schemas/StatusNovoEnum'
+        status_display:
+          type: string
+          readOnly: true
+        criado_em:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - categoria
+      - codigo
+      - criado_em
+      - id
+      - solicitante
+      - status_display
+      - titulo
+    StatusNovoEnum:
+      enum:
+      - ABERTO
+      - EM_ATENDIMENTO
+      - CONCLUIDO
+      type: string
+      description: |-
+        * `ABERTO` - Aberto
+        * `EM_ATENDIMENTO` - Em atendimento
+        * `CONCLUIDO` - Concluído
+    Usuario:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        username:
+          type: string
+          title: Usuário
+          description: Obrigatório. 150 caracteres ou menos. Letras, números e @/./+/-/_
+            apenas.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        nome:
+          type: string
+          readOnly: true
+        perfil:
+          $ref: '#/components/schemas/PerfilEnum'
+        perfil_display:
+          type: string
+          readOnly: true
+      required:
+      - id
+      - nome
+      - perfil_display
+      - username
+    UsuarioResumo:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        username:
+          type: string
+          title: Usuário
+          description: Obrigatório. 150 caracteres ou menos. Letras, números e @/./+/-/_
+            apenas.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        nome:
+          type: string
+          readOnly: true
+      required:
+      - id
+      - nome
+      - username
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
