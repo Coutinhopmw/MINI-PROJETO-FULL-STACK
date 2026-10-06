@@ -1,25 +1,55 @@
 # Python
 __pycache__/
 *.py[cod]
+*$py.class
+*.so
 .venv/
 venv/
+env/
+ENV/
+
+# Arquivos de build e pacotes Python
+build/
+dist/
+*.egg-info/
+.eggs/
 
 # Django
 db.sqlite3
+db.sqlite3-journal
 staticfiles/
 media/
+local_settings.py
 
 # Segredos e ambiente
 .env
+.env.*
+*.pem
+
+# Logs
+*.log
 
 # Testes e qualidade
 .pytest_cache/
 .ruff_cache/
 .coverage
 htmlcov/
+.tox/
+.mypy_cache/
 
 # Editor / SO
 .vscode/
 .idea/
 .DS_Store
 Thumbs.db
+desktop.ini
+
+# Celery (Muito usado em background jobs no Django)
+celerybeat-schedule
+celerybeat.pid
+*.pid
+
+# Frontend (Caso use Tailwind, Bootstrap, Vue, React no futuro)
+node_modules/
+package-lock.json
+yarn.lock
