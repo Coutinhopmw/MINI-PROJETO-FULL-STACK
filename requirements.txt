@@ -1,0 +1,8 @@
+Django==5.2.*
+djangorestframework
+django-filter
+drf-spectacular
+psycopg[binary]
+django-environ
+whitenoise
+gunicorn
