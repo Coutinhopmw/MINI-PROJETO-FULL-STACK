@@ -10,7 +10,8 @@ URL = '/api/v1/solicitacoes/'
 
 
 def url_de(solicitacao, sufixo=''):
-    return f'{URL}{solicitacao.pk}/{sufixo}'
+    base = f'{URL}{solicitacao.pk}/'
+    return f'{base}{sufixo}/' if sufixo else base
 
 
 def erro_de(resposta):
